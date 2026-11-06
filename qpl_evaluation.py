@@ -204,7 +204,7 @@ def verdict_collapse(s: Settings, curve: list):
 def verdict_factor(s: Settings, curve: list):
     """Streuung und Lücke gegen das Gewicht der Pads."""
     txt = "; ".join(f"×{de(c['factor'], 2).rstrip('0').rstrip(',')}: Streuung {de(c['spread'], 2)}, Lücke {pct(c['gap'], 1)}" for c in curve)
-    return "info", f"Gleiche Instanz mit {s.pads} Pads, Pad-Gewicht gegen das Grundgewicht: {txt}. Schwache Anker lassen die Bauteile in der Mitte klumpen, starke ziehen sie zu den Pads (Streuung über 1: sie liegen außerhalb des Rasters)."
+    return "info", f"Gleiche Instanz mit {s.pads} Pads, Pad-Gewicht gegen das Grundgewicht: {txt}. Schwache Anker lassen die Bauteile in der Mitte klumpen, starke ziehen sie zu den Pads (Streuung über 1: breiter verteilt als die Plätze, meist weil Bauteile zu den Pads außerhalb des Rasters gezogen werden)."
 
 
 def verdict_reweight(s: Settings, curve: list):

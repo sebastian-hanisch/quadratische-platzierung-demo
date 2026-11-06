@@ -75,7 +75,7 @@ PRESET_HELP = {
     "Ohne Anker: alles fällt zusammen": "Ohne Pads ist das System singulär: alle Bauteile liegen auf demselben Punkt, die Rundung ist beliebig.",
     "Acht Anker": "Acht Pads auf dem Ring: die Bauteile werden stärker auseinandergezogen, die Lücke nach der Rundung ist im Median am kleinsten.",
     "Gleichverteilte Flüsse": "Jedes Paar hat einen zufälligen Fluss von 0 bis 9: dichte Matrix, alle Bauteile hängen aneinander.",
-    "Dünn besetzt": "Nur ein Teil der Paare hat Fluss: der Flussgraph zerfällt oft, Teile ohne Weg zu einem Pad fallen in die Mitte.",
+    "Dünn besetzt": "Nur ein Teil der Paare hat Fluss: der Flussgraph zerfällt häufig, Teile ohne Weg zu einem Pad fallen in die Mitte.",
     "Schwache Anker": "Das Pad-Gewicht ist ein Viertel des Grundgewichts: die Bauteile klumpen in der Mitte, die Rundung wird schlechter.",
     "Zwölf Bauteile": "Zwölf Bauteile auf dem 3×4-Raster: nicht aufzählbar; verglichen wird mit der besten von 100 steilsten Abstiegen (obere Grenze der Lücke).",
 }

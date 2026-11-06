@@ -5,7 +5,7 @@ Kosten einer Anordnung (Bauteil i auf Platz p_i): cost(p) = Σ_{i<k} F[i,k] · |
 
 **Relaxation der Orte:** minimiere je Achse Σ_{i<k} F[i,k] (x_i − x_k)² + Σ w (x_i − a)². Nullsetzen des Gradienten gibt (L + diag(W)) x = b mit L = diag(Σ_k F) − F, W_i = Σ_Pads w[i,Pad], b_i = Σ w a.
 Ohne Pads ist L singulär (alle x_i gleich ist ein Minimum): alles fällt auf einen Punkt. Bauteile ohne Weg zu einem Pad fallen ebenso; ein schwacher Anker in der Mitte hält das System lösbar.
-**Umgewichtung („Bound2Bound-artig“, eigene Fassung für 2-Pin-Verbindungen):** je Achse F / max(|Δ|, ε) statt F, mehrfach neu gerechnet: das minimiert die lineare Länge statt der quadratischen.
+**Umgewichtung („Bound2Bound-artig“, eigene Fassung für 2-Pin-Verbindungen):** je Achse F / max(|Δ|, ε) statt F, mehrfach neu gerechnet: das minimiert näherungsweise (mit ε geglättet) die lineare Länge statt der quadratischen.
 **Rundung:** lineare Zuordnung der stetigen Orte auf die Plätze, kleinste Summe der Abstandsquadrate; die Quadrate werden vorher auf acht Stellen gerundet (`tie_quantized`), damit Gleichstände auf jedem Rechner gleich entschieden werden."""
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ from qpl_rng import SplitMix64
 class Pads:
     pos: np.ndarray           # (p, 2) Lage der Pads
     w: np.ndarray             # (n, p) Gewicht der Verbindung Bauteil–Pad (0 = keine)
-    base: float               # Grundgewicht (Median der positiven Flüsse, mindestens 1)
+    base: float               # Grundgewicht (Median der positiven Flüsse, auf eine ganze Zahl gerundet, mindestens 1)
     factor: float             # Faktor auf das Grundgewicht
 
     @property

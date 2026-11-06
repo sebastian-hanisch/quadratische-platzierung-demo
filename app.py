@@ -2,7 +2,7 @@
 Sebastian Hanisch - Operations Research und Machine Learning
 
 Stück 9 der Reihe „Anordnen: relaxieren und runden“: die Orte der Bauteile werden reell relaxiert. Mit festen Pads (Ankern) ist das ein lineares Gleichungssystem; ohne Anker fällt alles auf einen Punkt. Danach rundet eine Zuordnung auf die Plätze,
-und die Umgewichtung („Bound2Bound-artig“) kürzt die Länge, ohne die gerundete Anordnung zuverlässig zu verbessern. Aufbau und Regeln: DEMO-PLAYBOOK.md (§2).
+und die Umgewichtung („Bound2Bound-artig“) kürzt die Länge, verbessert die gerundete Anordnung bei 2 und 4 Pads nicht und bei 8 Pads nur tendenziell. Aufbau und Regeln: DEMO-PLAYBOOK.md (§2).
 
 Lauffähig mit: streamlit run app.py
 """
@@ -91,7 +91,7 @@ st.markdown(
     """
 **Was passiert, wenn man die Orte reell relaxiert?** Dieselbe Aufgabe wie in Stück 1 bis 8: `n` Bauteile auf `n` Plätze, Kosten gleich der Summe aus **Fluss mal Abstand** über alle Paare, dazu **feste Pads** (Anker) um das Raster, an denen einzelne Bauteile hängen. Hier dürfen die Bauteile an **beliebigen Punkten**
 der Ebene sitzen. Minimiert man die Summe der **Abstandsquadrate**, ist das ein **lineares Gleichungssystem** je Achse (Laplace-Matrix des Flussgraphen plus die Gewichte der Pads). **Ohne Anker fällt alles auf einen Punkt**; mit Ankern liegen die Bauteile verteilt, aber klumpig und auf stetigen Orten.
-Eine **lineare Zuordnung** rundet auf die Plätze. Die **Umgewichtung** („Bound2Bound-artig“) rechnet das System mit Gewichten `F / |Δ|` mehrfach neu und minimiert so die lineare Länge.
+Eine **lineare Zuordnung** rundet auf die Plätze. Die **Umgewichtung** („Bound2Bound-artig“) rechnet das System mit Gewichten `F / |Δ|` mehrfach neu und minimiert so näherungsweise die lineare Länge.
 Die sechs Familien der Flussmatrix sind **eigene, einfache Erfindungen** (aus Stück 2), die **Pads ebenso**; die Umgewichtung ist eine **eigene einfache Fassung**, nicht Bound2Bound der Literatur. Stück 9 der Reihe „Anordnen: relaxieren und runden“.
 
 Weiter unten: **fünf Experimente** (**🔬**), **🚧 Wo die Annahmen enden** und der Expander **📐 Mathematische Formulierung**.
@@ -101,7 +101,7 @@ Weiter unten: **fünf Experimente** (**🔬**), **🚧 Wo die Annahmen enden** u
 with st.expander("So funktioniert es", expanded=True):
     st.markdown(
         """
-1. **Anker:** `p` feste Pads liegen auf einem Ring um das Raster; jedes hängt mit einem Gewicht an zwei zufälligen Bauteilen (Grundgewicht: der Median der positiven Flüsse).
+1. **Anker:** `p` feste Pads liegen auf einem Ring um das Raster; jedes hängt mit einem Gewicht an zwei zufälligen Bauteilen (Grundgewicht: der auf eine ganze Zahl gerundete Median der positiven Flüsse, mindestens 1).
 2. **Das System:** je Achse `(L + diag(W)) x = b` mit der Laplace-Matrix `L = diag(Σ F) − F`, den Pad-Gewichten `W` je Bauteil und `b = Σ Gewicht · Pad-Lage`. Ohne Pads ist es singulär: alle Bauteile liegen auf demselben Punkt (hier hält ein schwacher Anker in der Mitte das System lösbar).
 3. **Rundung:** die Zuordnung, die die Summe der Abstandsquadrate zwischen stetigem Ort und Platz minimiert. Die **Überlappung** zählt, wie viele Bauteile mit einem anderen denselben nächsten Platz haben: das muss die Zuordnung auflösen.
 4. **Umgewichtung:** je Achse `F / max(|Δ|, 0,3)` statt `F`, einige Male neu gerechnet: die lineare (Manhattan-)Länge sinkt, die Bauteile rücken zusammen.
@@ -126,7 +126,7 @@ with st.sidebar:
     st.button("🎲 Neue Instanz", width="stretch", on_click=randomize_seed)
     st.markdown("**Die Anker**")
     pads_n = st.select_slider("Zahl der Pads", options=C.PAD_CHOICES, key="pads_select", help="Feste Anker auf dem Ring um das Raster; ohne Pads fällt alles auf einen Punkt.")
-    factor = st.select_slider("Pad-Gewicht (Faktor)", options=C.FACTOR_CHOICES, key="factor_select", format_func=lambda f: f"×{f:g}", help="Faktor auf das Grundgewicht (Median der positiven Flüsse): schwache Anker lassen die Bauteile in der Mitte klumpen.")
+    factor = st.select_slider("Pad-Gewicht (Faktor)", options=C.FACTOR_CHOICES, key="factor_select", format_func=lambda f: f"×{f:g}", help="Faktor auf das Grundgewicht (gerundeter Median der positiven Flüsse): schwache Anker lassen die Bauteile in der Mitte klumpen.")
     reweights = st.select_slider("Umgewichtungen", options=C.REWEIGHT_CHOICES, key="reweights_select", help="Wie oft das System mit Gewichten F / |Δ| neu gerechnet wird („Bound2Bound-artig“).")
 
 sync_query_params({"family_select": family, "n_select": int(n), "seed_input": int(seed), "pads_select": int(pads_n), "factor_select": float(factor), "reweights_select": int(reweights)})
@@ -318,7 +318,7 @@ $$f(x) = \sum_{i<k} F_{ik}(x_i - x_k)^2 + \sum_{i,j} w_{ij}(x_i - a_j)^2 .$$
 Der Gradient ist $2\big((L + W)x - b\big)$ mit der Laplace-Matrix $L = \mathrm{diag}(F\mathbf{1}) - F$, $W = \mathrm{diag}(w\mathbf{1})$ und $b_i = \sum_j w_{ij} a_j$; also löst man das **lineare System** $(L + W)\,x = b$. $L$ ist positiv semidefinit mit $L\mathbf{1} = 0$:
 ohne Pads ($W = 0$) ist jedes $x = c\,\mathbf{1}$ ein Minimum, **alle Bauteile fallen auf einen Punkt**; $L + W$ ist genau dann regulär, wenn jede Zusammenhangskomponente des Flussgraphen mindestens ein Bauteil mit Pad-Gewicht enthält (sonst fällt diese Komponente zusammen; hier hält ein Anker $10^{-6}$ in der Mitte das System lösbar).
 
-**Umgewichtung.** Für zwei Bauteile gilt $(x_i - x_k)^2 = |x_i - x_k| \cdot |x_i - x_k|$: gewichtet man die Verbindung mit $1 / \max(|x_i - x_k|, \varepsilon)$, ist der quadratische Wert gleich dem linearen $|x_i - x_k|$. Wiederholtes Neurechnen (iterativ umgewichtete kleinste Quadrate) minimiert die lineare Länge; $\varepsilon = 0{,}3$ Platzabstände.
+**Umgewichtung.** Für zwei Bauteile gilt $(x_i - x_k)^2 = |x_i - x_k| \cdot |x_i - x_k|$: gewichtet man die Verbindung mit $1 / \max(|x_i - x_k|, \varepsilon)$, ist der quadratische Wert gleich dem linearen $|x_i - x_k|$, sofern $|x_i - x_k| \ge \varepsilon$ (darunter ist er $(x_i - x_k)^2 / \varepsilon$). Wiederholtes Neurechnen (iterativ umgewichtete kleinste Quadrate) minimiert die lineare Länge näherungsweise, mit $\varepsilon = 0{,}3$ Platzabstände geglättet.
 Das ist der Grundgedanke von Bound2Bound für 2-Pin-Verbindungen; die Fassung hier ist **eigen**.
 
 **Rundung.** Die Zuordnung $\pi$, die $\sum_i \lVert x_i - s_{\pi_i} \rVert_2^2$ minimiert (lineare Zuordnung, Ungarische Methode); Gleichstände werden nach Rundung der Abstandsquadrate auf acht Stellen entschieden, damit sie auf jedem Rechner gleich ausfallen.
