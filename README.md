@@ -1,9 +1,8 @@
 # Quadratische Platzierung – Streamlit-Demo
 
-<!-- TODO nach dem Deploy: direkt hierher den Live-Link setzen (Leerzeile davor und danach):
-**[→ Demo live ausprobieren](https://sebastianhanisch-quadratische-platzierung-demo.streamlit.app/)** -->
+**[→ Demo live ausprobieren](https://sebastianhanisch-quadratische-platzierung-demo.streamlit.app/)**
 
-Stück 9 von 15 der **Konzepte-Reihe „Anordnen: relaxieren und runden“** für die Website „Sebastian Hanisch – Operations Research und Machine Learning“ (die Konzepte-Seite der Reihe gibt es noch nicht). Die Stücke 3 bis 6 haben die **Zielfunktion** und die **Menge der Anordnungen** relaxiert ([Gilmore–Lawler](https://github.com/sebastian-hanisch/gilmore-lawler-demo), [doppeltstochastische Relaxation](https://github.com/sebastian-hanisch/birkhoff-relaxation-demo)), Stück 8, [Branch and Bound mit Schranke](https://github.com/sebastian-hanisch/schranke-im-baum-demo), hat den Beweis geführt. Dieses Stück relaxiert die **Orte** (Kante der Reihe: *Kontrast*): Statt auf den Plätzen eines Rasters dürfen die Bauteile an beliebigen Punkten der Ebene sitzen, und das Verfahren rundet danach auf die Plätze zurück.
+Stück 9 von 15 der **Konzepte-Reihe „Anordnen: relaxieren und runden“** für die Website „Sebastian Hanisch – Operations Research und Machine Learning“ (die [Konzepte-Seite der Reihe](https://sebastianhanisch.net/konzepte-anordnen.html)). Die Stücke 3 bis 6 haben die **Zielfunktion** und die **Menge der Anordnungen** relaxiert ([Gilmore–Lawler](https://github.com/sebastian-hanisch/gilmore-lawler-demo), [doppeltstochastische Relaxation](https://github.com/sebastian-hanisch/birkhoff-relaxation-demo)), Stück 8, [Branch and Bound mit Schranke](https://github.com/sebastian-hanisch/schranke-im-baum-demo), hat den Beweis geführt. Dieses Stück relaxiert die **Orte** (Kante der Reihe: *Kontrast*): Statt auf den Plätzen eines Rasters dürfen die Bauteile an beliebigen Punkten der Ebene sitzen, und das Verfahren rundet danach auf die Plätze zurück.
 
 ## Warum dieses Problem
 
